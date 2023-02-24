@@ -8,8 +8,9 @@ echo $SECRET
 MAIN(){
   echo -e "\nEnter your username:"
   read USER_NAME
-  USER_ID=SEARCH_USER_ID $USER_NAME
-  GAME
+  SEARCH_USER_ID $USER_NAME
+  USER_ID=$($PSQL "SELECT user_id FROM users WHERE name='$USERNAME'")
+  GAME $USER_ID
 }
 
 SEARCH_USER_ID(){
@@ -25,7 +26,6 @@ SEARCH_USER_ID(){
     GUESSES=$($PSQL "SELECT COUNT(*) AS guess_total FROM games WHERE user_id=$USER_ID")
     echo "Welcome back, $1! You have played $GUESSES games, and your best game took $BEST_GAME guesses."
   fi
-  return $USER_ID
 }
 
 GAME() {
@@ -49,7 +49,7 @@ GAME() {
       read GUESS
     else
       echo "You guessed it in $NUMBER_OF_GUESSES tries. The secret number was $SECRET. Nice job!"
-      INSERT_GUESSES_RESULT=$($PSQL "INSERT games(guesses, user_id) VALUES($NUMBER_OF_GUESSES, $USER_ID)")
+      INSERT_GUESSES_RESULT=$($PSQL "INSERT games(guesses, user_id) VALUES($NUMBER_OF_GUESSES, $1)")
     fi
   done
 }
