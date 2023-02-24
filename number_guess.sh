@@ -2,7 +2,7 @@
 echo -e "\n~~ Number guessing game ~~\n"
 #globales variables
 PSQL="psql -X --username=freecodecamp --dbname=number_guess -t --no-align -c"
-SECRET=(( $RANDOM % 100 + 1))
+SECRET=$(( $RANDOM % 100 + 1))
 echo $SECRET
 #MAIN FUNCTION
 MAIN(){
